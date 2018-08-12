@@ -1,6 +1,6 @@
 # Sentiment-analysis
 
-This repository implements sentiment classification using IMDB dataset using machine learning and natural language processing methods. I also implemented flask web app for each and tried to give a production feel to them.
+This repository implements sentiment classification using IMDB dataset using machine learning and natural language processing methods. I also implemented flask web app for each and tried to give a deployment feel to them.
 
 I tried to solve this problem with three techniques-
 - Natural language processing for sentiment analysis using [AFINN word valence](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010). 
