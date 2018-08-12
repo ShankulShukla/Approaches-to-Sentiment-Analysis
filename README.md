@@ -45,4 +45,4 @@ I tried to solve this problem with three techniques-
  
  For training - Sklearn, Pandas, NLTK
  
- > These are can be installed using pip.  
+ > These all can be installed using pip.  
