@@ -41,7 +41,7 @@ I tried to solve this problem with three techniques-
  3. Play with this tool ;)
  
  #### Prerequisites -
- For running - Tensorflow, flask 
+ For running - Tensorflow, flask, numpy
  
  For training - Sklearn, Pandas, NLTK
  
