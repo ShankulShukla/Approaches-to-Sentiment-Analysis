@@ -13,8 +13,8 @@ I tried to solve this problem with three techniques-
 
 - AFINN is a word list for sentiment analysis. It has around 2477 english words and phrases with their affinity of being positive word or negative word represented in a scale of -5 (most negative word) to +5 (most positive word).
 - In this basic technique I tried to preprocess a input review into token of words using some preprocessing steps, then I tend to find each word in the review(processed) onto the AFINN word list and noted the its proximity of being positive or being negative.
-- Added up the proximity for each word and predicted the review being positive or negative under some threshold(I have choosen 0 as provided good result on some loose checkings). 
-- In the training predictions I have also used multi-threading to speedup the process. 
+- Added up the proximity for each word and predicted the review being positive or negative under some threshold(I have choosen 0 as provided good result on some loose checkings).
+- In the training predictions I have also used multi-threading to speedup the process also to increase the corpora of words I have used wordnet inc. the word valence dictionary size to 5496 from 2477 originally.
 - It is a language processing technique which work on some hard coded rules(like choosing the threshold etc) and tries to get the opinion of the text on the word it contains.
 > On test set of imdb dataset, this model got a accuracy of - 76.1% 
 
