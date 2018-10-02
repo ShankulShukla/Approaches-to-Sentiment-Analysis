@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 
 # change this directory where you have this repo folder
-curr = r'C:\Users\shankul\Desktop\senti'
+curr = r'D:\projects\senti'
 stop = pickle.load(open(os.path.join(curr,'building classifier','stop_words.pkl'),'rb'))
 clf = pickle.load(open(os.path.join(curr,'building classifier','classifier.pkl'),'rb'))
 vect = pickle.load(open(os.path.join(curr,'building classifier','vocab_.pkl'),'rb'))
@@ -88,7 +88,30 @@ def classify2(review):
         pred = sess.run([y_prob],feed_dict=feed)
     return pred
 
+# Word-CNN
 
+def classify3(review):
+    review = preprocessing(review)
+    mapped_review = []
+    for word in review.split():
+        if word in word_to_int.keys():
+            mapped_review.append(word_to_int[word])
+        else:
+            mapped_review.append(0)
+    seq = np.zeros((1,seq_len),dtype = int)
+    review_arr = np.array(mapped_review)
+    seq[0,-len(mapped_review):] = review_arr[-seq_len:]
+    with tf.Session() as sess:
+        saver = tf.train.import_meta_graph(r'D:\projects\senti\model_\senti-59.ckpt.meta')
+        saver.restore(sess, tf.train.latest_checkpoint(r'D:\projects\senti\model_/'))
+        # not using dropout in testing
+        graph = tf.get_default_graph()
+        tf_x = graph.get_tensor_by_name("inputs/tf_x:0")
+        tf_keepprob = graph.get_tensor_by_name("inputs/tf_keepprob:0")
+        y = graph.get_tensor_by_name("output/predict:0")
+        feed = {tf_x: seq, tf_keepprob: 1.0}
+        pred = sess.run(y,feed_dict=feed)
+    return pred
 
 from flask import Flask, render_template, request
 
@@ -119,6 +142,16 @@ def result2():
     else:
         res = "Positive"
     return render_template('resultpage.html',review = review_,prediction = res, data = 'accuracy', probability = str(pred*100)+"%")
+
+@app.route('/check4',methods = ['Post'])
+def result3():
+    review_ = request.form['review']
+    pred= classify3(review_)[0]
+    if pred == 1:
+        res = "Positive"
+    else:
+        res = "Negative"
+    return render_template('resultpage.html',review = review_,prediction = res, data = 'accuracy', probability = "/*Not mentioned*/")
 
 if __name__ == '__main__':
     app.run(debug=True)
