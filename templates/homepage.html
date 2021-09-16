@@ -3,17 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
 </head>
-<body style="background-color:grey;">
-<center>
-    <br><h1> Movie Review Sentiment Classifier  </h1>
-    <br>
-    <form action ='/check1' method="Post">
-        <br><big>Your Review</big> : <input type="text" size ="50" style="height:25px;font-size:12pt;" name="review"><br><br><br>
-        <input type="submit" value=" AFINN Word classifier "> &nbsp
-	<input type="submit" value=" Bag of word with multinomial naive bayes " formaction='/check2'> &nbsp
-	<input type="submit" value=" LSTM-rnn " formaction='/check3'>
-    </form>
-</center>
+<body>
+<div class="container">
+    <div class="row">
+        <h1> Movie Review Sentiment Classifier  </h1>
+    </div>
+    <div class="margin-top">
+        <form action ='/check1' method="Post" class="row">
+            <div class="col-sm-6">
+                <div class="row form-group">
+                    {% if reviewtext %}
+                        <a class="float-right" href="/">Clear review</a>
+                    {% endif %}
+                    <label for="reviewText" class="reviewHead">Your Review -</label>
+                    <textarea class="form-control" id="reviewText" name="review" rows="7" placeholder="Enter your review here ..." required>{{reviewtext}}</textarea>
+                </div>
+                <div class="row {{ '' if active else 'hideDiv' }}">
+                    <label class="reviewHead">Result -</label>
+                    <div class="resultdiv">
+                        <div class="resulttxt">It's <b>{{prediction}}</b> review</div>
+                        <div class="resulttxt {{'' if score else 'hideDiv'}}">{{scoretext}} of text to be a <b>{{prediction}}</b> review is <b>{{score}}</b></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row margin-button">
+                    <input type="submit" value=" Lexicon based classifier(AFINN) " formaction='/check1' class="btn btn-large btn-blue">
+                </div>
+                <div class="row margin-button">
+                    <input type="submit" value=" Multinomial naive bayes(unigram approach) " formaction='/check2' class="btn btn-large btn-blue">
+                </div>
+                <div class="row margin-button">
+                    <input type="submit" value=" Multinomial naive bayes(bigram approach) " formaction='/check3' class="btn btn-large btn-blue">
+                </div>
+                <div class="row margin-button">
+                    <input type="submit" value=" Recurrent neural network(custom embedding) " formaction='/check4' class="btn btn-large btn-blue">
+                </div>
+                <div class="row margin-button">
+                    <input type="submit" value=" Recurrent neural network(GloVe embedding) " formaction='/check5' class="btn btn-large btn-blue">
+                </div>
+                <div class="row margin-button">
+                    <input type="submit" value=" Convolution neural network(1D convolution) " formaction='/check6' class="btn btn-large btn-blue">
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    </div>
 </body>
 </html>

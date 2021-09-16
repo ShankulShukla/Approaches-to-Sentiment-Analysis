@@ -1,0 +1,39 @@
+.btn-blue {
+	color: #4682B4;
+	border-color: #4682B4;
+}
+.btn-blue:hover {
+  background: #4682B4;
+  color: #fff;
+  border-color: #4682B4;
+}
+.btn-large {
+	font-size: 16px;
+    padding: 20px 20px;
+    width: 80%;
+}
+.margin-button{
+margin: 12px 6px;
+}
+.reviewHead{
+font-size: 20px;
+}
+.margin-top{
+margin-top: 20px;
+}
+.resultdiv{
+    height: 120px;
+    background-color: #b3ffb3;
+    border: 2px solid red;
+    border-radius: 8px;
+}
+.resulttxt{
+margin: 8px;
+font-size: 20px;
+}
+.hideDiv{
+display: none;
+}
+.float-right{
+float:right;
+}

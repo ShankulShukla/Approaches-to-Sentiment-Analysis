@@ -1,46 +1,40 @@
-
+# In this implementation we will be using CNNs for natural language processing. As CNNs are primarily famous for its usage in 2D images, in NLP for any text sequence we traet it as a one-dimensional image.
+# One-dimensional CNNs can process local features such as  n-grams in text.
 import tensorflow as tf
 import pandas as pd
 import numpy as np
 import re
+import os
 
+# Importing the dataset of 50000 IMDB reviews.
+df = pd.read_csv(os.getcwd()+r'\data\IMDB_Dataset.csv')
 
-df1 = pd.read_csv(r"D:\projects\dataset\train_imdb.csv")
-df2 = pd.read_csv(r"D:\projects\dataset\test_imdb.csv")
-
-
-# concatenating for similar proceesing for each file.
-l = [df1,df2]
-df= pd.concat(l,ignore_index=True)
-
-
-print(df.tail())
 
 # for constructing a sort of dictionary which can be used to extract the word vectors.
 from collections import Counter
 count = Counter()
 
-# preprocessing
+# Pre-processing the review text
+# Removing html, hyperlinks
+# Extracting emoticons and appending at the end of review, as emoticons in my analysis carry special meaning so not removing it
+# Removing symbols, then converting to lower case
 for i,text in enumerate(df['review']):
     text = re.sub('<[^>]*>', '', text)
     emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',text.lower()) 
     text = re.sub('[\W]+',' ',text.lower()) + ' '.join(emoticons).replace('-','')
     df.loc[i,"review"] = text 
-    count.update(text.split())    
+    count.update(text.split())
+
+# mapping target values to int
+df.sentiment = [ 1 if each == "positive" else 0 for each in df.sentiment]
 
 # one can directly import the word_to_int.pkl here which is in building classifier
 
 word_count = sorted(count,key=count.get,reverse =True)
 
-
-word_count[:5]
-
-
 word_to_int = {word:i for i ,word in enumerate(word_count,1)}
 
-
-int_to_word = {i:word for i ,word in enumerate(word_count,1)}
-
+seq_length = 200
 
 mapped_reviews =[]
 for review in df['review']:
@@ -58,10 +52,7 @@ x_train, x_test, y_train, y_test = seq[:35000], seq[35000:], df.loc[:34999,"sent
 
 
 
-print(x_test.shape)
-
 #hyperparameters for the model
-seq_length = 200
 classes = 2
 emb_size = 256
 filter_sizes = [3,4,5]
@@ -123,7 +114,7 @@ def batch_generator(x,y,batch_size):
 saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    # next line used for further training purpose that is loding the model again and training it
+    # next line used for further training purpose that is loading the model again and training it
     # saver.restore(sess,tf.train.latest_checkpoint('./model_/'))
     for epoch in range(n_epoch):
         losses = []
