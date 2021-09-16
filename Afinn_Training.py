@@ -123,7 +123,13 @@ positiveintensifactor = 1.5
 negativeintensifactor = -1.5
 
 # Used to determine the accuracy of the model
-rightclassify = 0 
+rightclassify = 0
+
+# for calculating model efficiency parameters i.e., specificity, sensitivity and balanced accuracy
+true_positive = 0
+false_negative = 0
+false_positive = 0
+true_negative = 0
 
 # Applying sentiment analysis algorithm based on AFINN word list.
 for i in range(len(df)):
@@ -181,10 +187,24 @@ for i in range(len(df)):
     # Threshold for classification
     if len(scorearray) > 0:
         tot = sum(scorearray)/len(scorearray)
-        if (tot >= 0 and df.iloc[i,1] == 'positive') or (tot < 0 and df.iloc[i,1] == 'negative'):
+        if (tot >= 0 and df.iloc[i, 1] == 'positive') or (tot < 0 and df.iloc[i, 1] == 'negative'):
             rightclassify += 1
+        if tot >= 0 and df.iloc[i, 1] == 'positive':
+            true_positive += 1
+        elif tot >= 0:
+            false_positive += 1
+        elif df.iloc[i, 1] == 'positive':
+            false_negative += 1
+        else:
+            true_negative += 1
 
-print("Accuracy on 50000 data is-",(rightclassify/50000)*100)
+# output model metrics obtained
+sensi = true_positive/(true_positive+false_negative)
+spec = true_negative/(true_negative+false_positive)
+print("Accuracy on 50000 IMDB reviews is-",(rightclassify/50000)*100)
+print("Specificity of lexicon model is-",spec)
+print("Sensitivity of lexicon model is-",sensi)
+print("Balanced accuracy of lexicon model is-",(spec+sensi)/2)
 
 # Exporting the lexicon model for testing/deployment
 import pickle

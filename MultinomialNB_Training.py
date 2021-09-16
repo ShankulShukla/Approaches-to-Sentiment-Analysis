@@ -154,6 +154,27 @@ def fitting(x, y):
     clf.partial_fit(x, y, classes=np.array([0, 1]))
     return clf
 
+
+# for calculating the model metrics: specificity, sensitivity and balanced accuracy
+def confusion_matrix(y_pred, y_test, pos_label):
+    true_positive = 0
+    false_negative = 0
+    false_positive = 0
+    true_negative = 0
+
+    for (pred, true) in zip(y_pred, y_test):
+        if pred == pos_label and true == pos_label:
+            true_positive += 1
+        elif pred == pos_label:
+            false_positive += 1
+        elif true == pos_label:
+            false_negative += 1
+        else:
+            true_negative += 1
+    sensi = true_positive / (true_positive + false_negative)
+    spec = true_negative / (true_negative + false_positive)
+    return sensi, spec
+
 # Mapping target labels to its numeric value for training
 df.sentiment = [1 if each == "positive" else 0 for each in df.sentiment]
 
@@ -191,7 +212,13 @@ pred = clf_unigram.predict(test_transform)
 
 acc_unigram = (pred == y_test).sum() / len(y_test)
 
+# output model metrics obtained after training model
 print("Accuracy on test dataset using unigram features - ", acc_unigram*100)
+sensi, spec = confusion_matrix(pred, y_test, 1)
+print("Specificity of Multinomial naive bayes(unigram) is-",spec)
+print("Sensitivity of Multinomial naive bayes(unigram) is-",sensi)
+print("Balanced accuracy of Multinomial naive bayes(unigram) is-",(spec+sensi)/2)
+
 
 # Using bigram feature from TF-IDF to train the model
 
@@ -211,9 +238,14 @@ test_transform = vect_bigram.transform(x_test)
 
 pred = clf_bigram.predict(test_transform)
 
-acc_unigram = (pred == y_test).sum() / len(y_test)
+acc_bigram = (pred == y_test).sum() / len(y_test)
 
-print("Accuracy on test dataset using bigram features - ", acc_unigram*100)
+# output model metrics obtained after training model
+print("Accuracy on test dataset using bigram features - ", acc_bigram*100)
+sensi, spec = confusion_matrix(pred, y_test, 1)
+print("Specificity of Multinomial naive bayes(bigram) is-",spec)
+print("Sensitivity of Multinomial naive bayes(bigram) is-",sensi)
+print("Balanced accuracy of Multinomial naive bayes(bigram) is-",(spec+sensi)/2)
 
 # Exporting the classifier, unigram tf-idf and bigram tf-idf map for deployment/testing
 import pickle

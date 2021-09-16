@@ -238,4 +238,31 @@ round_ = np.around(result)
 y_test = y_test.reshape(-1,1)
 accuracy = np.sum(round_ == y_test[:len(round_)])/len(round_)
 
+# for calculating the model metrics: specificity, sensitivity and balanced accuracy
+def confusion_matrix(y_pred, y_test, pos_label):
+    true_positive = 0
+    false_negative = 0
+    false_positive = 0
+    true_negative = 0
+
+    for (pred, true) in zip(y_pred, y_test):
+        if pred == pos_label and true == pos_label:
+            true_positive += 1
+        elif pred == pos_label:
+            false_positive += 1
+        elif true == pos_label:
+            false_negative += 1
+        else:
+            true_negative += 1
+    sensi = true_positive / (true_positive + false_negative)
+    spec = true_negative / (true_negative + false_positive)
+    return sensi, spec
+
+sensi, spec = confusion_matrix(round_, y_test, 1.)
+
+# output the model matrics found after training
+print("Specificity of model is-",spec)
+print("Sensitivity of model is-",sensi)
+print("Balanced accuracy of model is-",(spec+sensi)/2)
+
 print("Accuracy on 10000 testing data is- ",accuracy)
