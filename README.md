@@ -1,4 +1,4 @@
-# Approaches optimizing sentiment analysis for IMDB movie reviews
+# Approaches to optimize sentiment analysis for IMDB movie reviews
 
 This repository implements sentiment classification using the IMDB dataset using machine learning and natural language processing methods. I also implemented a flask web app and tried to give a deployment feel to them.
 
@@ -34,8 +34,12 @@ I tried to solve this problem with three techniques-
 ## Multinomial naive bayes classifier using n-gram features of TF-IDF vectors
 
 - This is a machine learning technique, in which we try to represent the corpus of words into a bag of word representation using the Tfidf representation technique (applying some preprocessing to the text side by side). 
-- Then I tried to fit a Multinomial naive Bayes classifier onto this Tfidf representation.
-- To get the prediction I transformed the test review using the above fitted Tfidf representation and got the prediction.
+- Using TF-IDF to tokenize documents, learn the vocabulary and inverse document frequency weightings as vectorised classifier input. Extensive english language analysis to develop pre-processing for the classifier *(similar to lexicon model, refer code for clear view)*.
+- Extracting emoticons and appending at the end of review, as emoticons in my analysis carry special meaning so not removing it.
+- Using ngram approach, example for text "great movie", bigram "great movie" make lot much sense than unigrams "great" and "movie". In this implementation, I have used unigram and bigram features. 
+- As stop words generally do not pertains any special meaning, not considering in this implementation and removing stop word from review.
+- In this model I prepend the prefix "not" to every word after a token of logical negation(negation list above) until the next punctuation mark. EX- "I did not like this movie", in this example classifier will interpret "like" as a different feature(positive feature) ignoring its association with negation "not". After adding negation prefix, "like" becomes "notlike" will thus occur more often in negative document and act as cues for negative sentiment. Similarly, words like "notbad" will acquire positive associations with positive sentiment
+- sklearn's multinomial naive bayes algorithm as classifier to fit the sentiment model using processed features as input. Using partial fit only to allow incremental learning.
 
 **Using unigram features-**
 > ``` 
@@ -54,10 +58,12 @@ I tried to solve this problem with three techniques-
 ## Multilayer LSTM-RNN classifier using custom-trained word embedding and pre-trained GloVe word embedding
 
 - Above two techniques work on the principle that given a word, how much that word belongs to a certain category and we apply it to the whole text of words and try to get the intuition that which category does this whole text of word belong to.
-- But these model fail to capture word to word relationships i.e, how much given a word affect the occurrence of its nearby words.
-- Each word in a sentence depends greatly on what came before and comes after it. In order to account for this dependency, we use a recurrent neural network.
+- Although I tried to overcome this but these model are not that much confident in tackling long term and complex word to word relationships.
 - RNN is very good at getting dynamic temporal behavior for a time sequence and we can use this behavior to get a relationship among words in a text.
-- Especially LSTM (Long Short-Term Memory) units are modules that you can place inside of recurrent neural networks and they make sure that the hidden state can encapsulate information about long-term dependencies in the text.
+- In this implementation we are using RNN with Long Short Term Memory Units. These units make sure that the hidden state vector is able to maintain long term dependencies in the text.
+-  I am using word vector representation as input to RNN, I have to transform text information to these vectors as word similar in context, meaning, and semantics reside's in relatively the same area in the vector space since they both have similar definitions and are both used in similar contexts.
+- In this implementation, I am using a pre-trained word vector i.e., GloVe it much a much more manageable matrix then word2vec due its size. The matrix will contain 400,000 word vectors, each with a dimensionality of 50, and also I will be training my own word vector representation from the corpora of word available in the imdb dataset.
+- Refer code to understand the review pre-processing and RNN architecture.
 
 **Using GloVe word embedding-**
 > ``` 
