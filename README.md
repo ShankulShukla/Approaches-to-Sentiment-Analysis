@@ -25,7 +25,7 @@ I tried to solve this problem with three techniques-
 - To get the prediction I transformed the test review using the above fitted Tfidf representation and got the prediction.
 >  **On the test set of IMDB dataset, this model got an accuracy of - 89.3%**
 
-## Sentiment analysis using multilayer LSTM
+## Multilayer LSTM-RNN classifier using custom-trained word embedding and pre-trained GloVe word embedding
 
 - Above two techniques work on the principle that given a word, how much that word belongs to a certain category and we apply it to the whole text of words and try to get the intuition that which category does this whole text of word belong to.
 - But these model fail to capture word to word relationships i.e, how much given a word affect the occurrence of its nearby words.
@@ -34,7 +34,7 @@ I tried to solve this problem with three techniques-
 - Especially LSTM (Long Short-Term Memory) units are modules that you can place inside of recurrent neural networks and they make sure that the hidden state can encapsulate information about long-term dependencies in the text.
 > **On the test set of IMDB dataset, this model got an accuracy of - 87.1%**
  
- ## Sentiment analysis using CNN text classification
+ ## 1-D word-level CNN text classifier using custom trained word embedding
  
 - CNN has proven to be not only good in computer vision but has provided some state-of-the-art results in natural language processing.
 - The input layer to CNN is comprised of word embeddings, followed by multiple filters, then a max-pooling layer then to a sigmoid classifier with some dropout added in the last layer.
