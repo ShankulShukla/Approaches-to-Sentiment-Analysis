@@ -8,6 +8,10 @@ I tried to solve this problem with three techniques-
 - Sentiment classification using [Bag Of Words](https://en.wikipedia.org/wiki/Bag-of-words_model) .
 
 - Sentiment analysis using multilayer [LSTM](https://en.wikipedia.org/wiki/Long_short-term_memory) based [RNN](https://en.wikipedia.org/wiki/Recurrent_neural_network) network.
+## Demo 
+> Movie review flask app based on various model created.
+
+![image](https://drive.google.com/uc?export=view&id=1jEGDukR-olW28IcQzrxhjm5lnQFH_Igd)
 
 ## Lexicon based classifier using AFINN word valence
 
@@ -16,14 +20,31 @@ I tried to solve this problem with three techniques-
 - Added up the proximity for each word and predicted the review is positive or negative under some threshold(I have chosen 0 as provided a good result on some loose checkings).
 - In the training predictions, I have also used multi-threading to speed up the process also to increase the corpora of words I have used wordnet inc. the word valence dictionary size to 5496 from 2477 originally.
 - It is a language processing technique that works on some hard-coded rules(like choosing the threshold etc) and tries to get the opinion of the text on the word it contains.
-> **On the test set of IMDB dataset, this model got an accuracy of - 76.1% **
+> ``` 
+> Specificity of the model (in percent)- 68.74%
+> Sensitivity of the model (in percent)- 73.56%
+> Balanced accuracy of model - 71.15%
+> ```
 
 ## Multinomial naive bayes classifier using n-gram features of TF-IDF vectors
 
 - This is a machine learning technique, in which we try to represent the corpus of words into a bag of word representation using the Tfidf representation technique (applying some preprocessing to the text side by side). 
 - Then I tried to fit a Multinomial naive Bayes classifier onto this Tfidf representation.
 - To get the prediction I transformed the test review using the above fitted Tfidf representation and got the prediction.
->  **On the test set of IMDB dataset, this model got an accuracy of - 89.3%**
+
+**Using unigram features-**
+> ``` 
+> Specificity of the model (in percent)- 88.704%
+> Sensitivity of the model (in percent)- 84.901%
+> Balanced accuracy of model - 86.8025%
+> ```
+
+**Using bigram features-**
+> ``` 
+> Specificity of the model (in percent)- 92.769%
+> Sensitivity of the model (in percent)- 86.179%
+> Balanced accuracy of model - 89.474%
+> ```
 
 ## Multilayer LSTM-RNN classifier using custom-trained word embedding and pre-trained GloVe word embedding
 
@@ -32,7 +53,20 @@ I tried to solve this problem with three techniques-
 - Each word in a sentence depends greatly on what came before and comes after it. In order to account for this dependency, we use a recurrent neural network.
 - RNN is very good at getting dynamic temporal behavior for a time sequence and we can use this behavior to get a relationship among words in a text.
 - Especially LSTM (Long Short-Term Memory) units are modules that you can place inside of recurrent neural networks and they make sure that the hidden state can encapsulate information about long-term dependencies in the text.
-> **On the test set of IMDB dataset, this model got an accuracy of - 87.1%**
+
+**Using GloVe word embedding-**
+> ``` 
+> Specificity of the model (in percent)- 87.702%
+> Sensitivity of the model (in percent)- 86.37%
+> Balanced accuracy of model - 87.036%
+> ```
+
+**Using custom trained word embedding-**
+> ``` 
+> Specificity of the model (in percent)- 88.148%
+> Sensitivity of the model (in percent)- 88.052%
+> Balanced accuracy of model - 88.1%
+> ```
  
  ## 1-D word-level CNN text classifier using custom trained word embedding
  
@@ -40,7 +74,12 @@ I tried to solve this problem with three techniques-
 - The input layer to CNN is comprised of word embeddings, followed by multiple filters, then a max-pooling layer then to a sigmoid classifier with some dropout added in the last layer.
 - Here I have used embeddings(low-dimensional representations) for words included in the training procedure from scratch but some research papers have proven that word2vec or glove embedding with some tweaking in multiple channels has given more good results.
 - Also, I have used word-level CNN as character-level CNN has not provided better results in the initial checkings.
-> **On the test set of IMDB dataset, this model got an accuracy of - 90.04%**
+
+> ``` 
+> Specificity of the model (in percent)- 88.98%
+> Sensitivity of the model (in percent)- 91.1%
+> Balanced accuracy of model - 90.04%
+> ```
  
  ## Usage and training
  
@@ -59,7 +98,7 @@ I tried to solve this problem with three techniques-
  python <filename>.py
  ```
  
- **Deploy the flask app**
+ **Deploy the movie review flask app**
  
  ```
  python app.py
@@ -67,7 +106,7 @@ I tried to solve this problem with three techniques-
  
  > All trained models and data will be available in this [link]()
 
-## References - 
+## References 
 - Sherstinsky A. Fundamentals of Recurrent Neural Network (RNN) and Long Short-Term Memory (LSTM) network. Physica D: Nonlinear Phenomena 2020 Mar;404:132306.
 - Kim, Y. Convolutional neural networks for sentence classification. arXiv 2014, arXiv:1408.5882
 - Pal, Subarno & Ghosh, Soumadip & Nag, Amitava. (2018). Sentiment Analysis in the Light of LSTM Recurrent Neural Networks. International Journal of Synthetic Emotions. 9. 33-39. 10.4018/IJSE.2018010103
