@@ -1,29 +1,23 @@
 # Approaches to optimize sentiment analysis for IMDB movie reviews
 
-This repository implements sentiment classification using the IMDB dataset using machine learning and natural language processing methods. I also implemented a flask web app and tried to give a deployment feel to them.
+In this research-based repository, I tried to tackle the sentiment classification of movie reviews using optimized machine learning, deep learning, and natural language processing methods. 
 
-I tried to solve this problem with three techniques-
-- Natural language processing for sentiment analysis using [AFINN word valence](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010). 
-
-- Sentiment classification using [Bag Of Words](https://en.wikipedia.org/wiki/Bag-of-words_model) .
-
-- Sentiment analysis using multilayer [LSTM](https://en.wikipedia.org/wiki/Long_short-term_memory) based [RNN](https://en.wikipedia.org/wiki/Recurrent_neural_network) network.
 ## Demo 
-> Movie review flask app based on various model created.
+> Movie review flask app based on the various models created.
 
 ![image](https://drive.google.com/uc?export=view&id=1jEGDukR-olW28IcQzrxhjm5lnQFH_Igd)
 
 ## Lexicon based classifier using AFINN word valence
 
-- AFINN is a word list for sentiment analysis. It has around 2477 English words and phrases with their affinity of being a positive word or negative word represented on a scale of -5 (most negative word) to +5 (most positive word). As AFINN have limited word mapping, so to add extended corpora of words for the task, I used NLTK synset (wordnet) instances to group of synonymous words and add that to our lexicon mapping.
-- To do any text analysis, it is very important to note relation between different part of sentence, to achieve this I inferred english language structure to define following rules -
+- AFINN is a word list for sentiment analysis. It has around 2477 English words and phrases with their affinity of being a positive word or negative word represented on a scale of -5 (most negative word) to +5 (most positive word). As AFINN has limited word mapping, so to add extended corpora of words for the task, I used NLTK synset (wordnet) instances to a group of synonymous words and add that to our lexicon mapping.
+- To do any text analysis, it is very important to note the relation between different parts of a sentence, to achieve this I inferred English language structure to define the following rules -
   - Degree modifiers to alter sentiment intensity. *Positive intensifier*: Ex- "very" when used "good", intensify its sentiment i.e., "very good" has more positive sentiment then "good", *Negative intensifier*: Ex- "very" when used "bad", intensify its sentiment i.e., "very bad" has more negative sentiment then "bad".
-  - Negative contractions and negations are used to negate ideas. Example - "good" have positive connotation to it but "not good" as strong negative connotation, so a "not" negations changes idea of being good.
-  - Identifying words are all in capital letters, people do use of word-shape to signal emphasis, example - "movie was BAD" have more negative intensity than "movie was bad".
-  - Identifying exclamations in the review as people conventionally do use punctuation to signal increased sentiment intensity. In this implementation considering exclamation symbol, example - "great!!!" have more positive intensity than "great".
-  - If word not found in word list mapping, check for its stem or root word.
+  - Negative contractions and negations are used to negate ideas. For example - "good" has a positive connotation to it but "not good" has a strong negative connotation, so a "not" negations changes idea of being good.
+  - Identifying words are all in capital letters, people do use word-shape to signal emphasis, example - "movie was BAD" have more negative intensity than "movie was bad".
+  - Identifying exclamations in the review as people conventionally do use punctuation to signal increased sentiment intensity. In this implementation considering exclamation symbol, for example - "great!!!" have more positive intensity than "great".
+  - If a word is not found in word list mapping, check for its stem or root word.
 - In this model I preprocess an input review into a token of words using preprocessing steps, then I tend to find each word in the review(processed) onto the AFINN word list and noted its proximity of being positive or being negative.
-- Fine tune Exclamationfactor, Capsfactor, Negationfactor, Positiveintensifactor, Negativeintensifactor to optimise meaning transfer among part of sentences. Refer code for explanation. 
+- Fine-tune Exclamationfactor, Capsfactor, Negationfactor, Positiveintensifactor, Negativeintensifactor to optimize meaning transfer among parts of sentences. Refer code for explanation. 
 
 > ``` 
 > Specificity of the model (in percent)- 68.74%
@@ -31,15 +25,15 @@ I tried to solve this problem with three techniques-
 > Balanced accuracy of model - 71.15%
 > ```
 
-## Multinomial naive bayes classifier using n-gram features of TF-IDF vectors
+## Multinomial naive Bayes classifier using n-gram features of TF-IDF vectors
 
 - This is a machine learning technique, in which we try to represent the corpus of words into a bag of word representation using the Tfidf representation technique (applying some preprocessing to the text side by side). 
-- Using TF-IDF to tokenize documents, learn the vocabulary and inverse document frequency weightings as vectorised classifier input. Extensive english language analysis to develop pre-processing for the classifier *(similar to lexicon model, refer code for clear view)*.
-- Extracting emoticons and appending at the end of review, as emoticons in my analysis carry special meaning so not removing it.
-- Using ngram approach, example for text "great movie", bigram "great movie" make lot much sense than unigrams "great" and "movie". In this implementation, I have used unigram and bigram features. 
-- As stop words generally do not pertains any special meaning, not considering in this implementation and removing stop word from review.
-- In this model I prepend the prefix "not" to every word after a token of logical negation(negation list above) until the next punctuation mark. EX- "I did not like this movie", in this example classifier will interpret "like" as a different feature(positive feature) ignoring its association with negation "not". After adding negation prefix, "like" becomes "notlike" will thus occur more often in negative document and act as cues for negative sentiment. Similarly, words like "notbad" will acquire positive associations with positive sentiment
-- sklearn's multinomial naive bayes algorithm as classifier to fit the sentiment model using processed features as input. Using partial fit only to allow incremental learning.
+- Using TF-IDF to tokenize documents, learn the vocabulary, and inverse document frequency weightings as vectorized classifier input. Extensive English language analysis to develop pre-processing for the classifier *(similar to lexicon model, refer code for a clear view)*.
+- Extracting emoticons and appending at the end of the review, as emoticons in my analysis carry special meaning so not removing them.
+- Using the n-gram approach, for example for text "great movie", bigram "great movie" make a lot more sense than unigrams "great" and "movie". In this implementation, I have used unigram and bigram features. 
+- As stop words generally do not pertain to any special meaning, not considering in this implementation and removing stop word from review.
+- In this model, I prepend the prefix "not" to every word after a token of logical negation(negation list above) until the next punctuation mark. EX- "I did not like this movie", in this example classifier will interpret "like" as a different feature(positive feature) ignoring its association with a negation "not". After adding the negation prefix, "like" becomes "notlike" will thus occur more often in a negative document and act as cues for negative sentiment. Similarly, words like "notbad" will acquire positive associations with positive sentiment
+- sklearn's multinomial naive Bayes algorithm as a classifier to fit the sentiment model using processed features as input. Using partial fit only to allow incremental learning.
 
 **Using unigram features-**
 > ``` 
@@ -58,12 +52,12 @@ I tried to solve this problem with three techniques-
 ## Multilayer LSTM-RNN classifier using custom-trained word embedding and pre-trained GloVe word embedding
 
 - Above two techniques work on the principle that given a word, how much that word belongs to a certain category and we apply it to the whole text of words and try to get the intuition that which category does this whole text of word belong to.
-- Although I tried to overcome this but these model are not that much confident in tackling long term and complex word to word relationships.
+- Although I tried to overcome this, but these models are not that much confident in tackling long-term and complex word to word relationships.
 - RNN is very good at getting dynamic temporal behavior for a time sequence and we can use this behavior to get a relationship among words in a text.
-- In this implementation we are using RNN with Long Short Term Memory Units. These units make sure that the hidden state vector is able to maintain long term dependencies in the text.
--  I am using word vector representation as input to RNN, I have to transform text information to these vectors as word similar in context, meaning, and semantics reside's in relatively the same area in the vector space since they both have similar definitions and are both used in similar contexts.
-- In this implementation, I am using a pre-trained word vector i.e., GloVe it much a much more manageable matrix then word2vec due its size. The matrix will contain 400,000 word vectors, each with a dimensionality of 50, and also I will be training my own word vector representation from the corpora of word available in the imdb dataset.
-- Refer code to understand the review pre-processing and RNN architecture.
+- In this implementation, we are using RNN with Long Short Term Memory Units. These units make sure that the hidden state vector is able to maintain long-term dependencies in the text.
+-  I am using word vector representation as input to RNN, I have to transform text information to these vectors as words similar in context, meaning, and semantics reside's in relatively the same area in the vector space since they both have similar definitions and are both used in similar contexts.
+- In this implementation, I am using a pre-trained word vector i.e., GloVe it much a much more manageable matrix than word2vec due to its size. The matrix will contain 400,000-word vectors, each with a dimensionality of 50, and also I will be training my own word vector representation from the corpora of words available in the IMDB dataset.
+- Refer to code to understand the review pre-processing and RNN architecture.
 
 **Using GloVe word embedding-**
 > ``` 
@@ -79,7 +73,7 @@ I tried to solve this problem with three techniques-
 > Balanced accuracy of model - 88.1%
 > ```
  
- ## 1-D word-level CNN text classifier using custom trained word embedding
+ ## 1-D word-level CNN text classifier using a custom trained word embedding
  
 - CNN has proven to be not only good in computer vision but has provided some state-of-the-art results in natural language processing.
 - The input layer to CNN is comprised of word embeddings, followed by multiple filters, then a max-pooling layer then to a sigmoid classifier with some dropout added in the last layer.
