@@ -15,11 +15,16 @@ I tried to solve this problem with three techniques-
 
 ## Lexicon based classifier using AFINN word valence
 
-- AFINN is a word list for sentiment analysis. It has around 2477 English words and phrases with their affinity of being a positive word or negative word represented on a scale of -5 (most negative word) to +5 (most positive word).
-- In this basic technique I tried to preprocess an input review into a token of words using some preprocessing steps, then I tend to find each word in the review(processed) onto the AFINN word list and noted its proximity of being positive or being negative.
-- Added up the proximity for each word and predicted the review is positive or negative under some threshold(I have chosen 0 as provided a good result on some loose checkings).
-- In the training predictions, I have also used multi-threading to speed up the process also to increase the corpora of words I have used wordnet inc. the word valence dictionary size to 5496 from 2477 originally.
-- It is a language processing technique that works on some hard-coded rules(like choosing the threshold etc) and tries to get the opinion of the text on the word it contains.
+- AFINN is a word list for sentiment analysis. It has around 2477 English words and phrases with their affinity of being a positive word or negative word represented on a scale of -5 (most negative word) to +5 (most positive word). As AFINN have limited word mapping, so to add extended corpora of words for the task, I used NLTK synset (wordnet) instances to group of synonymous words and add that to our lexicon mapping.
+- To do any text analysis, it is very important to note relation between different part of sentence, to achieve this I inferred english language structure to define following rules -
+  - Degree modifiers to alter sentiment intensity. *Positive intensifier*: Ex- "very" when used "good", intensify its sentiment i.e., "very good" has more positive sentiment then "good", *Negative intensifier*: Ex- "very" when used "bad", intensify its sentiment i.e., "very bad" has more negative sentiment then "bad".
+  - Negative contractions and negations are used to negate ideas. Example - "good" have positive connotation to it but "not good" as strong negative connotation, so a "not" negations changes idea of being good.
+  - Identifying words are all in capital letters, people do use of word-shape to signal emphasis, example - "movie was BAD" have more negative intensity than "movie was bad".
+  - Identifying exclamations in the review as people conventionally do use punctuation to signal increased sentiment intensity. In this implementation considering exclamation symbol, example - "great!!!" have more positive intensity than "great".
+  - If word not found in word list mapping, check for its stem or root word.
+- In this model I preprocess an input review into a token of words using preprocessing steps, then I tend to find each word in the review(processed) onto the AFINN word list and noted its proximity of being positive or being negative.
+- Fine tune Exclamationfactor, Capsfactor, Negationfactor, Positiveintensifactor, Negativeintensifactor to optimise meaning transfer among part of sentences. Refer code for explanation. 
+
 > ``` 
 > Specificity of the model (in percent)- 68.74%
 > Sensitivity of the model (in percent)- 73.56%
